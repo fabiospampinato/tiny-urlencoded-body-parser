@@ -1,9 +1,8 @@
 
 /* IMPORT */
 
-import * as isPrimitive from 'is-primitive';
-import * as querystring from 'querystring';
-import {Options} from './types';
+import {isPrimitive, isString} from 'is';
+import type {Options, Request, Response, Next} from './types';
 
 /* MAIN */
 
@@ -11,21 +10,21 @@ const urlencoded = ( options?: Options ) => {
 
   const limit = options?.limit ?? Infinity;
 
-  const setBody = ( req, body ): void => {
+  const setBody = ( req: Request, body: unknown ): void => {
 
     req.body = isPrimitive ( body ) ? {} : body;
 
   };
 
-  return async ( req, res, next: ( error?: Error ) => void ): Promise<void> => {
+  return async ( req: Request, res: Response, next: Next ): Promise<void> => {
 
-    const {method} = req;
+    const {headers, method} = req;
 
     if ( method !== 'POST' && method !== 'PUT' && method !== 'PATCH' ) return next ();
 
-    const type = req.headers['content-type'];
+    const type = headers['content-type'];
 
-    if ( typeof type !== 'string' || !type.includes ( 'application/x-www-form-urlencoded' ) ) return next ();
+    if ( !isString ( type ) || !type.includes ( 'application/x-www-form-urlencoded' ) ) return next ();
 
     try {
 
@@ -39,11 +38,11 @@ const urlencoded = ( options?: Options ) => {
 
       }
 
-      setBody ( req, querystring.parse ( body ) );
+      setBody ( req, Object.fromEntries ( new URLSearchParams ( body ) ) );
 
       next ();
 
-    } catch ( error ) {
+    } catch ( error: unknown ) {
 
       setBody ( req, {} );
 
