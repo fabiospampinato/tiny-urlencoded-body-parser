@@ -2,7 +2,7 @@
   "name": "tiny-urlencoded-body-parser",
   "repository": "github:fabiospampinato/tiny-urlencoded-body-parser",
   "description": "A tiny middleware that parses URL-encoded request bodies.",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
