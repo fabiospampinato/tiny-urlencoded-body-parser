@@ -38,7 +38,7 @@ const urlencoded = ( options?: Options ) => {
 
       }
 
-      setBody ( req, Object.fromEntries ( new URLSearchParams ( body ) ) );
+      setBody ( req, Object.fromEntries ( new URLSearchParams ( body ).entries () ) );
 
       next ();
 
